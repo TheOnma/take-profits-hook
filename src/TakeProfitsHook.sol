@@ -92,4 +92,8 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
         // i.e. -2 * 60 = -120
         return intervals * tickSpacing;
     }
+
+    function getOrderId(PoolKey calldata key, int24 tick, bool zeroForOne) public pure returns (uint256) {
+        return uint256(keccak256(abi.encode(key.toId(), tick, zeroForOne)));
+    }
 }
