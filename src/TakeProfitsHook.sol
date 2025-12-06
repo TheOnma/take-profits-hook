@@ -34,6 +34,12 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
     error NothingToClaim();
     error NotEnoughToClaim();
 
+    // pendingOrders[poolKey.toId()][tickToSellAt][zeroForOne] = inputTokensAmount
+    mapping(PoolId poolId => mapping(int24 tickToSellAt => mapping(bool zeroForOne => uint256 inputAmount))) public
+        pendingOrders;
+
+    mapping(uint256 orderId => uint256 claimsSupply) public claimTokensSupply;
+
     // Constructor
     constructor(IPoolManager _manager, string memory _uri) BaseHook(_manager) ERC1155(_uri) {}
 
