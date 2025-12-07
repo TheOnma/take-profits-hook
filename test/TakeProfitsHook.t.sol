@@ -55,5 +55,10 @@ contract TakeProfitsHookTest is Test, Deployers {
         // Add initial liquidity to the pool
 
         // Some liquidity from -60 to +60 tick range
+        modifyLiquidityRouter.modifyLiquidity(
+            key,
+            ModifyLiquidityParams({tickLower: -60, tickUpper: 60, liquidityDelta: 10 ether, salt: bytes32(0)}),
+            ZERO_BYTES
+        );
     }
 }
