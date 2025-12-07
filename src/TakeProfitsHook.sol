@@ -107,6 +107,37 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
         return (this.afterSwap.selector, 0);
     }
 
+    function tryExecutingOrders(PoolKey calldata key, bool executeZeroForOne)
+        internal
+        returns (bool tryMore, int24 newTick)
+    {
+        (, int24 currentTick,,) = poolManager.getSlot0(key.toId());
+        int24 lastTick = lastTicks[key.toId()];
+
+        // Given `currentTick` and `lastTick`, 2 cases are possible:
+
+        // Case (1) - Tick has increased, i.e. `currentTick > lastTick`
+        // or, Case (2) - Tick has decreased, i.e. `currentTick < lastTick`
+
+        // If tick increases => Token 0 price has increased
+        // => We should check if we have orders looking to sell Token 0
+        // i.e. orders with zeroForOne = true
+
+        // TODO Case (1)
+
+        // If tick decreases => Token 1 price has increased
+        // => We should check if we have orders looking to sell Token 1
+        // i.e. orders with zeroForOne = false
+
+        // TODO Case (2)
+
+        // ------
+
+        // If no orders were found to be executed, we don't need to try
+        // executing any more - return `false` and `currentTick`
+        return (false, currentTick);
+    }
+
     function getLowerUsableTick(int24 tick, int24 tickSpacing) private pure returns (int24) {
         // E.g tickSpacing = 60, tick = -100
         // closest usable tick rounded-down will be -120
