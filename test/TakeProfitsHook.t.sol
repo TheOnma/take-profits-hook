@@ -116,4 +116,11 @@ contract TakeProfitsHookTest is Test, Deployers, ERC1155Holder {
         assertTrue(orderId != 0);
         assertEq(tokenBalance, amount);
     }
+
+    function test_cancelOrder() public {
+        // Place an order as earlier
+        int24 tick = 100;
+        uint256 amount = 10e18;
+        bool zeroForOne = true;
+    }
 }
