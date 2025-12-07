@@ -48,5 +48,12 @@ contract TakeProfitsHookTest is Test, Deployers {
         // Approve our hook address to spend these tokens as well
         MockERC20(Currency.unwrap(token0)).approve(address(hook), type(uint256).max);
         MockERC20(Currency.unwrap(token1)).approve(address(hook), type(uint256).max);
+
+        // Initialize a pool with these two tokens
+        (key,) = initPool(token0, token1, hook, 3000, SQRT_PRICE_1_1);
+
+        // Add initial liquidity to the pool
+
+        // Some liquidity from -60 to +60 tick range
     }
 }
