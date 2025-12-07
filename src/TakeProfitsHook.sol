@@ -211,4 +211,9 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
         currency.transfer(address(poolManager), amount);
         poolManager.settle();
     }
+
+    function _take(Currency currency, uint128 amount) internal {
+        // Take tokens out of PM to our hook contract
+        poolManager.take(currency, address(this), amount);
+    }
 }
