@@ -204,4 +204,11 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
         }
         return delta;
     }
+
+    function _settle(Currency currency, uint128 amount) internal {
+        // Transfer tokens to PM and let it know
+        poolManager.sync(currency);
+        currency.transfer(address(poolManager), amount);
+        poolManager.settle();
+    }
 }
