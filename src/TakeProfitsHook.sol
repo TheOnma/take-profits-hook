@@ -68,7 +68,7 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
     }
 
     function _afterInitialize(address, PoolKey calldata key, uint160, int24 tick) internal override returns (bytes4) {
-        // TODO
+        lastTicks[key.toId()] = tick;
         return this.afterInitialize.selector;
     }
 
