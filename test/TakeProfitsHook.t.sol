@@ -80,4 +80,13 @@ contract TakeProfitsHookTest is Test, Deployers {
             ZERO_BYTES
         );
     }
+
+    function test_placeOrder() public {
+        // Place a zeroForOne take-profit order
+        // for 10e18 token0 tokens
+        // at tick 100
+        int24 tick = 100;
+        uint256 amount = 10e18;
+        bool zeroForOne = true;
+    }
 }
