@@ -33,6 +33,20 @@ contract TakeProfitsHookTest is Test, Deployers {
     TakeProfitsHook hook;
 
     function setUp() public {
-        // TODO
+        // Deploy v4 core contracts
+        deployFreshManagerAndRouters();
+
+        // Deploy two test tokens
+        (token0, token1) = deployMintAndApprove2Currencies();
+
+        // Deploy our hook
+        uint160 flags = uint160(Hooks.AFTER_INITIALIZE_FLAG | Hooks.AFTER_SWAP_FLAG);
+        address hookAddress = address(flags);
+        deployCodeTo("TakeProfitsHook.sol", abi.encode(manager, ""), hookAddress);
+        hook = TakeProfitsHook(hookAddress);
+
+        // Approve our hook address to spend these tokens as well
+        MockERC20(Currency.unwrap(token0)).approve(address(hook), type(uint256).max);
+        MockERC20(Currency.unwrap(token1)).approve(address(hook), type(uint256).max);
     }
 }
