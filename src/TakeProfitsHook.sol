@@ -42,6 +42,8 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
 
     mapping(uint256 orderId => uint256 outputClaimable) public claimableOutputTokens;
 
+    mapping(PoolId poolId => int24 lastTick) public lastTicks;
+
     // Constructor
     constructor(IPoolManager _manager, string memory _uri) BaseHook(_manager) ERC1155(_uri) {}
 
