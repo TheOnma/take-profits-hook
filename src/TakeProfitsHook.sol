@@ -174,4 +174,34 @@ contract TakeProfitsHook is BaseHook, ERC1155 {
         Currency token = zeroForOne ? key.currency1 : key.currency0;
         token.transfer(msg.sender, outputAmount);
     }
+
+    function swapAndSettleBalances(PoolKey calldata key, SwapParams memory params) internal returns (BalanceDelta) {
+        // Conduct the swap inside the Pool Manager
+        BalanceDelta delta = poolManager.swap(key, params, "");
+
+        // If we just did a zeroForOne swap
+        // We need to send Token 0 to PM, and receive Token 1 from PM
+        if (params.zeroForOne) {
+            // Negative Value => Money leaving user's wallet
+            // Settle with PoolManager
+            if (delta.amount0() < 0) {
+                _settle(key.currency0, uint128(-delta.amount0()));
+            }
+
+            // Positive Value => Money coming into user's wallet
+            // Take from PM
+            if (delta.amount1() > 0) {
+                _take(key.currency1, uint128(delta.amount1()));
+            }
+        } else {
+            if (delta.amount1() < 0) {
+                _settle(key.currency1, uint128(-delta.amount1()));
+            }
+
+            if (delta.amount0() > 0) {
+                _take(key.currency0, uint128(delta.amount0()));
+            }
+        }
+        return delta;
+    }
 }
