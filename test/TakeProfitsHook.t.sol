@@ -145,4 +145,26 @@ contract TakeProfitsHookTest is Test, Deployers, ERC1155Holder {
         tokenBalance = hook.balanceOf(address(this), orderId);
         assertEq(tokenBalance, 0);
     }
+
+    function test_orderExecute_zeroForOne() public {
+        int24 tick = 100;
+        uint256 amount = 1 ether;
+        bool zeroForOne = true;
+
+        // Place our order at tick 100 for 10e18 token0 tokens
+        int24 tickLower = hook.placeOrder(key, tick, zeroForOne, amount);
+
+        // Do a seperate swap from OneForZero to make tick go up
+        // Sell 1e18 token1 tokens for token0 tokens
+        SwapParams memory params = SwapParams({
+            zeroForOne: !zeroForOne,
+            amountSpecified: -1 ether,
+            sqrtPriceLimitX96: TickMath.MAX_SQRT_PRICE - 1
+        });
+
+        PoolSwapTest.TestSettings memory testSettings =
+            PoolSwapTest.TestSettings({takeClaims: false, settleUsingBurn: false});
+
+        // Conduct the swap - `afterSwap` should also execute our placed order
+    }
 }
